@@ -133,9 +133,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var datepicker;
 
 	      if (attrs.uiTime === 'time') {
-	        datepicker = $element.datetimepicker;
+	        datepicker = $element.datetimepicker.bind($element);
 	      } else {
-	        datepicker = $element.datepicker;
+	        datepicker = $element.datepicker.bind($element);
 	      }
 
 	      var getOptions = function getOptions() {
