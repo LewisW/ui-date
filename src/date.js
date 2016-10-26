@@ -63,6 +63,13 @@ export default angular.module('ui.date', [])
       link: function link(scope, element, attrs, controller) {
 
         var $element = jQuery(element);
+        var datepicker;
+
+        if (attrs.uiTime === 'time') {
+          datepicker = $element.datetimepicker;
+        } else {
+          datepicker = $element.datepicker;
+        }
 
         var getOptions = function() {
           return angular.extend({}, uiDateConfig, scope.$eval(attrs.uiDate));
@@ -76,7 +83,7 @@ export default angular.module('ui.date', [])
             var isDate = angular.isDate(controller.$modelValue);
             var preserve = {};
 
-            if (!forcedUpdate && isDate && controller.$modelValue.toDateString() === $element.datepicker('getDate').toDateString()) {
+            if (!forcedUpdate && isDate && controller.$modelValue.toDateString() === datepicker('getDate').toDateString()) {
               return;
             }
 
@@ -86,7 +93,7 @@ export default angular.module('ui.date', [])
               });
             }
 
-            var newViewValue = $element.datepicker('getDate');
+            var newViewValue = datepicker('getDate');
 
             if (isDate) {
               angular.forEach(keys, (key) => {
@@ -132,7 +139,7 @@ export default angular.module('ui.date', [])
             $element.off('blur.datepicker').on('blur.datepicker', function() {
               if (!showing) {
                 scope.$apply(function() {
-                  $element.datepicker('setDate', $element.datepicker('getDate'));
+                  datepicker('setDate', datepicker('getDate'));
                   setVal();
                 });
               }
@@ -154,7 +161,7 @@ export default angular.module('ui.date', [])
               if (angular.isDate(controller.$modelValue) === false && angular.isString(controller.$modelValue)) {
                 controller.$modelValue = uiDateConverter.stringToDate(attrs.uiDateFormat, controller.$modelValue);
               }
-              $element.datepicker('setDate', controller.$modelValue);
+              datepicker('setDate', controller.$modelValue);
             };
           }
           // Check if the $element already has a datepicker.
@@ -162,16 +169,16 @@ export default angular.module('ui.date', [])
 
           if ($element.data('datepicker')) {
             // Updates the datepicker options
-            $element.datepicker('option', opts);
-            $element.datepicker('refresh');
+            datepicker('option', opts);
+            datepicker('refresh');
           } else {
             // Creates the new datepicker widget
-            $element.datepicker(opts);
+            datepicker(opts);
 
             // Cleanup on destroy, prevent memory leaking
             $element.on('$destroy', function() {
-              $element.datepicker('hide');
-              $element.datepicker('destroy');
+              datepicker('hide');
+              datepicker('destroy');
             });
           }
 
